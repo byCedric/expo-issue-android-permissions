@@ -44,15 +44,15 @@ jobs:
         run: |
           eas build --local \
             --non-interactive \
-            --output=./app-build \
+            --output=./app-${{ github.event.inputs.app }}.apk \
             --platform=android \
             --profile=production
 
       - name: 📁 Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: app-${{ github.event.inputs.app }}.apk
-          path: ${{ github.event.inputs.app }}/app-build
+          name: app-${{ github.event.inputs.app }}
+          path: ${{ github.event.inputs.app }}/app-${{ github.event.inputs.app }}.apk
 
       - name: 👷 Prebuild AndroidManifest.xml
         run: expo prebuild --non-interactive --platform android
