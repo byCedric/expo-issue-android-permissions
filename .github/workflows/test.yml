@@ -53,6 +53,9 @@ jobs:
         with:
           name: app-${{ github.event.inputs.app }}
           path: ${{ github.event.inputs.app }}/app-${{ github.event.inputs.app }}.apk
+          
+      - name: 🗒️ Resolve permissions
+        run: aapt d permissions ./app-${{ github.event.inputs.app }}.apk
 
       - name: 👷 Prebuild AndroidManifest.xml
         run: expo prebuild --non-interactive --platform android
