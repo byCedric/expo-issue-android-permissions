@@ -1,4 +1,4 @@
-name: test (${{ github.event.inputs.app }})
+name: test
 
 on:
   workflow_dispatch:
