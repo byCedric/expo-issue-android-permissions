@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "old-version",
-    "slug": "old-version",
+    "name": "android-permissions-old-version",
+    "slug": "android-permissions-old-version",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 1,
+      "package": "com.bycedric.androidpermissions.oldversion",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
