@@ -1,0 +1,64 @@
+name: test
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: App to debug
+        type: choice
+        default: blank
+        options:
+          - blank
+          - new-version
+          - old-version
+
+jobs:
+  build:
+    name: build (${{ github.event.inputs.app }})
+    runs-on: ubuntu-latest
+    defaults:
+      run: 
+        working-directory: ${{ github.event.inputs.app }}
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+          cache-dependency-path: ${{ github.event.inputs.app }}/yarn.lock
+
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          eas-version: latest
+          expo-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile --check-files
+
+      - name: 📱 Build with EAS
+        run: |
+          eas build --local \
+            --non-interactive \
+            --output=./app-build \
+            --platform=android \
+            --profile=production
+
+      - name: 📁 Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-${{ github.event.inputs.app }}.apk
+          path: ${{ github.event.inputs.app }}/app-build
+
+      - name: 👷 Prebuild AndroidManifest.xml
+        run: expo prebuild --non-interactive --platform android
+
+      - name: 📁 Upload Android Manifest
+        uses: actions/upload-artifact@v2
+        with:
+          name: AndroidManifest-${{ github.event.inputs.app }}.xml
+          path: ${{ github.event.inputs.app }}/android/app/src/main/AndroidManifest.xml
